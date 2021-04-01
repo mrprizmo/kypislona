@@ -61,14 +61,13 @@ def main():
 
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
-    session = sessionStorage[user_id]
 
     if req['session']['new']:
         # Это новый пользователь.
         # Инициализируем сессию и поприветствуем его.
         # Запишем подсказки, которые мы ему покажем в первый раз
 
-        session = {
+        sessionStorage[user_id] = {
             'suggests': [
                 "Не хочу.",
                 "Не буду.",
@@ -77,11 +76,14 @@ def handle_dialog(req, res):
             'index': 0,
             "need_to_sell": ("cлона", "кролика")
         }
+        session = sessionStorage[user_id]
         # Заполняем текст ответа
         res['response']['text'] = f"Привет! Купи {session['need_to_sell'][session['index']]}!"
         # Получим подсказки
         res['response']['buttons'] = get_suggests(user_id)
         return
+
+    session = sessionStorage[user_id]
 
     # Сюда дойдем только, если пользователь не новый,
     # и разговор с Алисой уже был начат
