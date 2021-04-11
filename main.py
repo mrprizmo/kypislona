@@ -62,28 +62,27 @@ def main():
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
-    if req['session']['new']:
-        # Это новый пользователь.
-        # Инициализируем сессию и поприветствуем его.
-        # Запишем подсказки, которые мы ему покажем в первый раз
-
+    if req['session']['new'] :
         sessionStorage[user_id] = {
-            'suggests': [
+            'suggests': [],
+            'index': 0,
+            "need_to_sell": ("cлона", "кролика"),
+            'new': True
+        }
+    session = sessionStorage[user_id]
+    
+    if session['new']:
+        session['suggests'] = [
                 "Не хочу.",
                 "Не буду.",
                 "Отстань!",
-                        ],
-            'index': 0,
-            "need_to_sell": ("cлона", "кролика")
-        }
-        session = sessionStorage[user_id]
+                        ]
+        session['new'] = False
         # Заполняем текст ответа
         res['response']['text'] = f"Привет! Купи {session['need_to_sell'][session['index']]}!"
         # Получим подсказки
         res['response']['buttons'] = get_suggests(user_id)
         return
-
-    session = sessionStorage[user_id]
 
     # Сюда дойдем только, если пользователь не новый,
     # и разговор с Алисой уже был начат
@@ -106,14 +105,7 @@ def handle_dialog(req, res):
         session['index'] += 1
         if session['index'] == len(session['need_to_sell']):
             res['response']['end_session'] = True
-            session['suggests'] = [
-                    "Не хочу.",
-                    "Не буду.",
-                    "Отстань!",
-                ],
-            res['response']['text'] = f"Привет! Купи {session['need_to_sell'][session['index']]}!"
-            res['response']['buttons'] = get_suggests(user_id)
-        return
+            session['new'] = True
 
     # Если нет, то убеждаем его купить слона!
     res['response']['text'] = \
