@@ -106,7 +106,7 @@ def handle_dialog(req, res):
         if session['index'] == len(session['need_to_sell']):
             res['response']['end_session'] = True
             session['new'] = True
-            return
+        return
 
     # Если нет, то убеждаем его купить слона!
     res['response']['text'] = \
