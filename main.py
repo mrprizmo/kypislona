@@ -105,7 +105,7 @@ def handle_dialog(req, res):
                 "Не буду.",
                 "Отстань!"
             ]
-            res['response']['text'] = f"Привет! Купи {session['need_to_sell'][session['index']]}!"
+            res['response']['text'] = f"Купи {session['need_to_sell'][session['index']]}!"
             # Получим подсказки
             res['response']['buttons'] = get_suggests(user_id)
         return
