@@ -99,6 +99,7 @@ def handle_dialog(req, res):
         session['index'] += 1
         if session['index'] == len(session['need_to_sell']):
             res['response']['end_session'] = True
+            res['response']['text'] = "Пока"
         else:
             session['suggests'] = [
                 "Не хочу.",
